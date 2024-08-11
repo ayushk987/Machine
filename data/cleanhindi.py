@@ -1,44 +1,39 @@
 import re
-import string
 
-def clean_hindi_text(text):
-    # Define Hindi-specific punctuation if any (add more if necessary)
-    hindi_punctuation = "।"  # Add any other punctuation specific to Hindi if needed
-    
-    # Remove standard and Hindi-specific punctuation
-    all_punctuation = string.punctuation + hindi_punctuation
-    text = re.sub(f"[{re.escape(all_punctuation)}]", " ", text)
-    
-    # Remove digits
-    text = re.sub(r'\d+', '', text)
-    
-    # Remove extra spaces
-    text = re.sub(r'\s+', ' ', text).strip()
-    
-    # Split text into sentences (assuming sentences end with "।")
-    sentences = text.split('।')
-    
-    # Remove empty sentences and extra spaces within sentences
-    cleaned_sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
-    
-    return cleaned_sentences
-
-def main(input_file, output_file):
-    # Load the file
-    with open(input_file, 'r', encoding='utf-8') as file:
+def clean_and_separate_hindi_text(file_path):
+    # Read the contents of the file
+    with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
 
-    # Clean the text
-    cleaned_sentences = clean_hindi_text(text)
+    # Remove any unwanted characters (like extra spaces, special symbols, etc.)
+    text = re.sub(r'[^\w\s।,?!]', '', text)  # Keep Hindi characters, punctuation, and spaces
 
-    # Save the cleaned text, keeping sentences separate
-    with open(output_file, 'w', encoding='utf-8') as file:
-        for sentence in cleaned_sentences:
-            file.write(sentence + "।\n")
+    # Normalize multiple spaces to a single space
+    text = re.sub(r'\s+', ' ', text).strip()
 
-    print(f"Text cleaning complete. Cleaned text saved to {output_file}")
+    # Split the text into sentences using Hindi-specific sentence delimiters
+    sentences = re.split(r'(?<=[।?!])\s+', text)
+
+    return sentences
+
+def write_sentences_to_file(sentences, output_path):
+    with open(output_path, 'w', encoding='utf-8') as output_file:
+        for sentence in sentences:
+            output_file.write(sentence.strip() + '\n')
 
 if __name__ == "__main__":
-    input_file = 'hindi.txt'  # Path to the input file
-    output_file = 'cleaned_hindi.txt'  # Path to the output file
-    main(input_file, output_file)
+    input_file = 'hindi.txt'        # Input file path
+    output_file = 'cleaned_hindi.txt'  # Output file path
+
+    # Get the cleaned and separated sentences
+    sentences = clean_and_separate_hindi_text(input_file)
+
+    # Write the sentences to a file, each on a new line
+    write_sentences_to_file(sentences, output_file)
+
+    # Optionally, print the sentences to the console
+    print("Sentences:")
+    for sentence in sentences:
+        print(sentence)
+
+    print(f"\nText has been cleaned and saved to {output_file}")

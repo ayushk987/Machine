@@ -5,7 +5,7 @@ import torch
 
 UNK = 0
 PAD = 1
-BATCH_SIZE = 8
+BATCH_SIZE = 32
 TRAIN_FILE = './data/trainp.txt'  # 训练集
 DEV_FILE = './data/devp.txt'  # 验证集
 TEST_FILE = './data/testp.txt'  # 测试文件
@@ -15,7 +15,7 @@ D_MODEL = 512  # embedding 维度
 D_FF = 1024  # feed forward第一个全连接层维数
 H_NUM = 8  # multi head attention hidden个数
 DROPOUT = 0.1  # dropout比例
-EPOCHS = 1
+EPOCHS = 50
 MAX_LENGTH = 60
 SRC_VOCAB = 19975  # 英文的单词数
 TGT_VOCAB = 35786  # 中文的单词数

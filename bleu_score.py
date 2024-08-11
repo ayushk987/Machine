@@ -1,5 +1,6 @@
 #ble_score.py
 from nltk.translate.bleu_score import sentence_bleu,corpus_bleu
+import sacrebleu
 
 def read_references():
     """
@@ -15,7 +16,7 @@ def read_references():
     for s in sentences:
         references = []
         references.append(s.strip().split(' '))
-        result.append(references)
+        result.append(s)
     f.close()
     return result
 
